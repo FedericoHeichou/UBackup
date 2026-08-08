@@ -1,10 +1,15 @@
 .slim/deepwork/
 .venv/
+.venv-build/
 __pycache__/
 *.pyc
+*.spec
 
 
 .pytest_cache/
 
 *.egg-info/
 TASK_STATE.md
+
+build/
+dist/

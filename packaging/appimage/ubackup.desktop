@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=UBackup
+Comment=Backup and restore utility
+Exec=ubackup
+Icon=ubackup
+Terminal=false
+Categories=Utility;System;
+StartupNotify=true

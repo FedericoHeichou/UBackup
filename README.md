@@ -161,26 +161,34 @@ Do not use `sudo -E` for the GUI.
 
 ## Portable build
 
-The project can still be packaged as a standalone PySide6/Nuitka application for the GUI side. The installed privileged helper and Polkit policy remain system components and must be installed separately because privilege elevation cannot safely be implemented by unpacking arbitrary root code from an untrusted per-user bundle at runtime.
+The GUI can be packaged as a single-file Linux AppImage. The privileged helper and Polkit policies remain separate system components and are distributed as a dedicated root-helper archive.
 
-Build the standalone portable application with:
+Build the AppImage locally with:
 
 ```bash
 chmod +x scripts/build_portable.sh
 ./scripts/build_portable.sh
 ```
-The standalone build is generated under `dist/`.
+
+The resulting executable is generated as `dist/UBackup-x86_64.AppImage`.
 
 ### Install the portable build
 
-You can build UBackup locally as described above, or download the latest portable build from the [GitHub Releases](https://github.com/FedericoHeichou/UBackup/releases) page.
+You can build UBackup locally or download the latest AppImage and root-helper archive from the [GitHub Releases](https://github.com/FedericoHeichou/UBackup/releases) page.
 
-After extracting the release, install the executable system-wide:
+Install the AppImage as a system-wide command:
 
 ```bash
-sudo cp ubackup /usr/local/bin/ubackup
+sudo mv UBackup*-x86_64.AppImage /usr/local/bin/ubackup
 sudo chmod 755 /usr/local/bin/ubackup
 sudo chown root:root /usr/local/bin/ubackup
+```
+
+Install the privileged helper from the matching release archive:
+
+```bash
+tar -xzf UBackup-*-root-helper.tar.gz
+sudo ./scripts/install_system.sh
 ```
 
 Optionally, create a desktop launcher:
@@ -191,11 +199,15 @@ cat > ~/ubackup.desktop <<'EOF'
 Type=Application
 Name=UBackup
 Comment=Backup and restore utility
-Exec=/usr/local/bin/ubackup
+Exec=ubackup
+Icon=ubackup
 Terminal=false
 Categories=Utility;System;
+StartupNotify=true
 EOF
 
+mkdir -p ~/.local/share/icons/hicolor/scalable/apps
+cp packaging/appimage/ubackup.svg ~/.local/share/icons/hicolor/scalable/apps/ubackup.svg
 mkdir -p ~/.local/share/applications
 mv ~/ubackup.desktop ~/.local/share/applications/ubackup.desktop
 chmod 644 ~/.local/share/applications/ubackup.desktop

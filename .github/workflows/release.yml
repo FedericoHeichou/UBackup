@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build:
-    name: Build Linux portable
+    name: Build Linux AppImage
     runs-on: ubuntu-latest
 
     steps:
@@ -44,16 +44,14 @@ jobs:
           umask 0002
           python -m pytest -q
 
-      - name: Build portable application
-        run: |
-          chmod +x scripts/build_portable.sh
-          ./scripts/build_portable.sh
-
-      - name: Package portable build
+      - name: Build single-file AppImage
         env:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
-          tar -C dist -czf "UBackup-${RELEASE_TAG}-linux-x86_64.tar.gz" .
+          chmod +x scripts/build_portable.sh
+          UBACKUP_APPIMAGE_OUTPUT="$PWD/UBackup-${RELEASE_TAG}-x86_64.AppImage" \
+            ./scripts/build_portable.sh
+          test -x "UBackup-${RELEASE_TAG}-x86_64.AppImage"
 
       - name: Package root helper installer
         env:
@@ -77,7 +75,22 @@ jobs:
           cp src/ubackup/restore_engine.py root-helper/src/ubackup/
           cp src/ubackup/system_scan.py root-helper/src/ubackup/
 
-          cp src/ubackup/privileged/*.py root-helper/src/ubackup/privileged/
+          cp src/ubackup/privileged/__init__.py root-helper/src/ubackup/privileged/
+          cp src/ubackup/privileged/backup.py root-helper/src/ubackup/privileged/
+          cp src/ubackup/privileged/configure.py root-helper/src/ubackup/privileged/
+          cp src/ubackup/privileged/credentials.py root-helper/src/ubackup/privileged/
+          cp src/ubackup/privileged/filesystem_navigation.py root-helper/src/ubackup/privileged/
+          cp src/ubackup/privileged/inspect.py root-helper/src/ubackup/privileged/
+          cp src/ubackup/privileged/maintenance.py root-helper/src/ubackup/privileged/
+          cp src/ubackup/privileged/metadata.py root-helper/src/ubackup/privileged/
+          cp src/ubackup/privileged/packages_install.py root-helper/src/ubackup/privileged/
+          cp src/ubackup/privileged/protocol.py root-helper/src/ubackup/privileged/
+          cp src/ubackup/privileged/restore.py root-helper/src/ubackup/privileged/
+          cp src/ubackup/privileged/restore_inplace.py root-helper/src/ubackup/privileged/
+          cp src/ubackup/privileged/restore_staging.py root-helper/src/ubackup/privileged/
+          cp src/ubackup/privileged/runtime.py root-helper/src/ubackup/privileged/
+          cp src/ubackup/privileged/startup.py root-helper/src/ubackup/privileged/
+          cp src/ubackup/privileged/validation.py root-helper/src/ubackup/privileged/
 
           cp packaging/libexec/ubackup-configure root-helper/packaging/libexec/
           cp packaging/libexec/ubackup-startup root-helper/packaging/libexec/
@@ -115,6 +128,6 @@ jobs:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
           gh release upload "$RELEASE_TAG" \
-            "UBackup-${RELEASE_TAG}-linux-x86_64.tar.gz" \
+            "UBackup-${RELEASE_TAG}-x86_64.AppImage" \
             "UBackup-${RELEASE_TAG}-root-helper.tar.gz" \
             --clobber
