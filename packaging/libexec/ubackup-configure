@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+
+# This is a fixed installed entrypoint.  It intentionally rejects arguments
+# rather than forwarding anything supplied by a caller through pkexec.
+if [ "$#" -ne 0 ]; then
+    exit 64
+fi
+
+exec /usr/bin/python3 -I -B /usr/lib/ubackup/ubackup/privileged/configure.py

@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=70", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ubackup"
+version = "0.1.0"
+description = "Curated incremental backup and restore GUI for Ubuntu using restic"
+requires-python = ">=3.11"
+dependencies = ["PySide6>=6.8,<7"]
+
+[project.scripts]
+ubackup = "ubackup.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+if [ "$#" -ne 0 ]; then exit 64; fi
+exec /usr/bin/python3 -I -B /usr/lib/ubackup/ubackup/privileged/restore_staging.py

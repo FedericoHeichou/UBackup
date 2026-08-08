@@ -1,0 +1,10 @@
+.slim/deepwork/
+.venv/
+__pycache__/
+*.pyc
+
+
+.pytest_cache/
+
+*.egg-info/
+TASK_STATE.md

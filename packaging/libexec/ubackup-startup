@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+if [ "$#" -ne 0 ]; then
+    printf '%s\n' 'ubackup-startup: arguments are not accepted' >&2
+    exit 64
+fi
+exec /usr/bin/python3 -I -B /usr/lib/ubackup/ubackup/privileged/startup.py

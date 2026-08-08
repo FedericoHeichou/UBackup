@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+
+# Reserved for Phase 3 GUI installation; Phase 1's system installer does not
+# copy or install this launcher.
+exec /usr/bin/python3 -I -B /usr/lib/ubackup/main.py "$@"

@@ -1,0 +1,7 @@
+# Conservative caches/ephemeral data
+**/.cache/**
+**/.local/share/Trash/**
+**/.Trash-*/**
+**/Code Cache/**
+**/GPUCache/**
+**/.local/share/flatpak/repo/objects/**

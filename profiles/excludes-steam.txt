@@ -1,0 +1,16 @@
+# Steam: safe-by-default reinstallable/cache data.
+# IMPORTANT: game install trees under steamapps/common are intentionally commented out.
+# Some games can store local saves inside their installation directory.
+# Enable only after verifying Steam Cloud / game-specific save locations.
+# **/.local/share/Steam/steamapps/common/**
+# **/.steam/steam/steamapps/common/**
+# **/SteamLibrary/steamapps/common/**
+
+**/steamapps/shadercache/**
+**/steamapps/downloading/**
+**/steamapps/temp/**
+**/steamapps/workshop/content/**
+
+# Intentionally KEEP:
+# **/Steam/userdata/**
+# **/steamapps/compatdata/**

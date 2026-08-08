@@ -1,0 +1,17 @@
+# Development dependencies and generated caches
+**/node_modules/**
+**/.venv/**
+**/venv/**
+**/__pycache__/**
+**/.pytest_cache/**
+**/.mypy_cache/**
+**/.ruff_cache/**
+**/.tox/**
+**/.nox/**
+**/.npm/_cacache/**
+**/.pnpm-store/**
+**/.yarn/cache/**
+**/.cargo/registry/cache/**
+**/.cargo/registry/src/**
+**/.gradle/caches/**
+**/.m2/repository/**
