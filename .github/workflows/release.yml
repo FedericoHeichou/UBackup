@@ -22,12 +22,15 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install system build dependencies
+      - name: Install system dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
             build-essential \
-            patchelf
+            patchelf \
+            libegl1 \
+            libgl1 \
+            libxkbcommon-x11-0
 
       - name: Install test dependencies
         run: |
@@ -52,6 +55,49 @@ jobs:
         run: |
           tar -C dist -czf "UBackup-${RELEASE_TAG}-linux-x86_64.tar.gz" .
 
+      - name: Package root helper installer
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          mkdir -p root-helper/scripts
+          mkdir -p root-helper/src/ubackup/privileged
+          mkdir -p root-helper/packaging/libexec
+          mkdir -p root-helper/packaging/polkit
+
+          cp scripts/install_system.sh root-helper/scripts/
+
+          cp src/ubackup/__init__.py root-helper/src/ubackup/
+          cp src/ubackup/cache.py root-helper/src/ubackup/
+          cp src/ubackup/fs_scan.py root-helper/src/ubackup/
+          cp src/ubackup/manifest.py root-helper/src/ubackup/
+          cp src/ubackup/models.py root-helper/src/ubackup/
+          cp src/ubackup/paths.py root-helper/src/ubackup/
+          cp src/ubackup/profiles.py root-helper/src/ubackup/
+          cp src/ubackup/restic_engine.py root-helper/src/ubackup/
+          cp src/ubackup/restore_engine.py root-helper/src/ubackup/
+          cp src/ubackup/system_scan.py root-helper/src/ubackup/
+
+          cp src/ubackup/privileged/*.py root-helper/src/ubackup/privileged/
+
+          cp packaging/libexec/ubackup-configure root-helper/packaging/libexec/
+          cp packaging/libexec/ubackup-startup root-helper/packaging/libexec/
+          cp packaging/libexec/ubackup-inspect root-helper/packaging/libexec/
+          cp packaging/libexec/ubackup-backup root-helper/packaging/libexec/
+          cp packaging/libexec/ubackup-restore-staging root-helper/packaging/libexec/
+          cp packaging/libexec/ubackup-restore-inplace root-helper/packaging/libexec/
+          cp packaging/libexec/ubackup-packages-install root-helper/packaging/libexec/
+
+          cp packaging/polkit/org.ubackup.configure.policy root-helper/packaging/polkit/
+          cp packaging/polkit/org.ubackup.startup.policy root-helper/packaging/polkit/
+          cp packaging/polkit/org.ubackup.inspect.policy root-helper/packaging/polkit/
+          cp packaging/polkit/org.ubackup.backup.policy root-helper/packaging/polkit/
+          cp packaging/polkit/org.ubackup.restore-staging.policy root-helper/packaging/polkit/
+          cp packaging/polkit/org.ubackup.restore-inplace.policy root-helper/packaging/polkit/
+          cp packaging/polkit/org.ubackup.packages-install.policy root-helper/packaging/polkit/
+
+          tar -C root-helper \
+            -czf "UBackup-${RELEASE_TAG}-root-helper.tar.gz" .
+
       - name: Create GitHub release if needed
         env:
           GH_TOKEN: ${{ github.token }}
@@ -63,11 +109,12 @@ jobs:
               --generate-notes
           fi
 
-      - name: Upload portable build to release
+      - name: Upload release files
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
           gh release upload "$RELEASE_TAG" \
             "UBackup-${RELEASE_TAG}-linux-x86_64.tar.gz" \
+            "UBackup-${RELEASE_TAG}-root-helper.tar.gz" \
             --clobber
